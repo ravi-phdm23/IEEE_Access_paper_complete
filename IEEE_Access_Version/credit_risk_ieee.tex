@@ -187,6 +187,8 @@ The framework is organised into three epistemically distinct layers that define 
 The architecture is instantiated through a concrete operational procedure that specifies the exact sequencing, selection criteria, and failure conditions under which a valid model and explanation are produced. This procedure is summarised in Algorithm~\ref{algo:full_pipeline}. Unlike the architecture, the workflow is falsifiable: it specifies quantitative selection criteria (AUC maximisation), computational order (feature stabilisation before model training), and explicit rejection conditions (explanation suppression when Sanity Ratio indicates weak signal).
 
 \begin{algorithm}[ht]
+\DontPrintSemicolon
+\LinesNotNumbered
 \caption{Operational Instantiation: Unified Predictive and Explanatory Workflow}
 \label{algo:full_pipeline}
 \KwIn{Dataset $D$, Model Registry $\mathcal{M}$, Configuration Set $\mathcal{C}$}
