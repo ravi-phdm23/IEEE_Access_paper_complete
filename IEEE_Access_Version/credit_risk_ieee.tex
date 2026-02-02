@@ -157,21 +157,22 @@ To establish a comprehensive baseline that adequately exercises each family's re
 
 \begin{table}[ht]
 \centering
-\caption{Model families as functional constructors and their implementation variant dimensions. Hyperparameters specify operational instantiations of each family's architectural principle rather than independent competing hypotheses.}
+\caption{Model families as functional constructors and their implementation variant dimensions.}
 \label{tab:classification_models}
-\begin{tabularx}{\columnwidth}{p{2cm} X r}
+\footnotesize
+\begin{tabularx}{\columnwidth}{p{1.8cm} X r}
 \toprule
-\textbf{Model Family} & \textbf{Constructor Implementation Dimensions (hyperparameter variants)} & \textbf{Configurations} \\
+\textbf{Model Family} & \textbf{Constructor Implementation Dimensions} & \textbf{Configs} \\
 \midrule
-Linear & Solver and regularisation structure in logistic regression (lbfgs, saga, newton-cg; L1, L2, ElasticNet) & 6 \\
+Linear & Solver and regularisation in logistic regression (lbfgs, saga, newton-cg; L1, L2, ElasticNet) & 6 \\
 \midrule
-Boosting & Ensemble size and learning rate for decision-stump AdaBoost, plus ensemble size for stochastic gradient boosting & 28 \\
+Boosting & Ensemble size, learning rate for AdaBoost; ensemble size for stochastic gradient boosting & 28 \\
 \midrule
-Bagging & Ensemble size for bagged trees and neural networks; ensemble size and feature subsampling for random forests & 36 \\
+Bagging & Ensemble size for bagged trees and neural nets; ensemble size and feature subsampling for random forests & 36 \\
 \midrule
-Instance-Based & Neighbourhood size and distance weighting in $k$-NN, with one cross-validated tuned model & 5 \\
+Instance & Neighbourhood size and distance weighting in $k$-NN, with CV tuning & 5 \\
 \midrule
-\textbf{Total Configurations} & \textbf{Combined instantiations across all constructors} & \textbf{75} \\
+\textbf{Total} & \textbf{Combined instantiations across constructors} & \textbf{75} \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -237,10 +238,10 @@ The module's configuration, inputs, processing logic, and constraints are summar
 \label{tab:llm_explanation_layer}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.1}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular}{
-  >{\raggedright\arraybackslash}p{2.5cm}
-  >{\raggedright\arraybackslash}p{8.5cm}
+  >{\raggedright\arraybackslash}p{2cm}
+  >{\raggedright\arraybackslash}p{6.4cm}
 }
 \toprule
 \textbf{Component} & \textbf{Description} \\
@@ -252,16 +253,16 @@ Input &
 SHAP values, feature names, feature values, true label, predicted probability \\
 \midrule
 Processing &
-Sorts features by absolute SHAP magnitude; selects top validated features for narrative \\
+Sorts features by absolute SHAP magnitude; selects top validated features \\
 \midrule
 Prompt Structure &
-System prompt constrains LLM role as ML analyst; user prompt provides numerical context (SHAP values, predictions); required output: two short paragraphs (1) Why model predicted this outcome, (2) Prediction alignment with actual label \\
+System prompt constrains LLM role as ML analyst; user prompt provides context; output: two paragraphs on (1) prediction reasoning, (2) prediction-label alignment \\
 \midrule
 Output &
-Two paragraphs summarising SHAP-driven reasoning and prediction correctness \\
+Two paragraphs: SHAP-driven reasoning and correctness \\
 \midrule
 Critical Constraint &
-Narrative must remain grounded in validated SHAP evidence; no unsupported causal claims; explanation suppressed if signal \textless\, noise \\
+Narrative grounded in validated SHAP evidence; no unsupported claims; suppressed if signal $<$ noise \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -329,21 +330,21 @@ Rather than evaluate all hyperparameter configurations exhaustively, a single ca
 \centering
 \caption{Evaluation metrics for model assessment and selection.}
 \label{tab:evaluation_metrics}
-\small
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{1.4cm}p{1.8cm}p{3cm}p{3.5cm}}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{p{0.9cm}p{1.4cm}p{2.2cm}p{3.8cm}}
 \toprule
 \textbf{Metric} & \textbf{Category} & \textbf{Purpose} & \textbf{Formula} \\
 \midrule
-AUC & Discrimination & Rank-ordering ability; threshold-independent & $\displaystyle \int_0^1 \mathrm{TPR}(x)\, d(\mathrm{FPR}(x))$ \\
-KS & Discrimination & Maximum class separation & $\displaystyle \max_{t} |\mathrm{TPR}(t) - \mathrm{FPR}(t)|$ \\
+AUC & Discrimin. & Rank-ordering & $\int_0^1 \mathrm{TPR}\, d\mathrm{FPR}$ \\
+KS & Discrimin. & Max separation & $\max_{t} |\mathrm{TPR}(t) - \mathrm{FPR}(t)|$ \\
 \midrule
-BS & Calibration & Probability calibration error & $\displaystyle \frac{1}{N} \sum_{i=1}^N (p_i - y_i)^2$ \\
+BS & Calibration & Prob. error & $\frac{1}{N} \sum_{i=1}^N (p_i - y_i)^2$ \\
 \midrule
-PCC & Classification & Overall accuracy & $\displaystyle \frac{\mathrm{TP} + \mathrm{TN}}{\mathrm{TP} + \mathrm{FP} + \mathrm{TN} + \mathrm{FN}}$ \\
-Recall & Classification & Sensitivity; detect defaults & $\displaystyle \frac{\mathrm{TP}}{\mathrm{TP} + \mathrm{FN}}$ \\
-H & Utility & Cost-sensitive performance \cite{Hand2009_hmeasure} & $\displaystyle 1 - \frac{\mathrm{EMC}}{\mathrm{EMC}_0}$ \\
+PCC & Classif. & Accuracy & $\frac{\mathrm{TP} + \mathrm{TN}}{\mathrm{TP} + \mathrm{FP} + \mathrm{TN} + \mathrm{FN}}$ \\
+Recall & Classif. & Sensitivity & $\frac{\mathrm{TP}}{\mathrm{TP} + \mathrm{FN}}$ \\
+H & Utility & Cost-sensitive \cite{Hand2009_hmeasure} & $1 - \frac{\mathrm{EMC}}{\mathrm{EMC}_0}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -404,23 +405,25 @@ Features are ranked by dual-selector importance and systematically evaluated for
 \label{tab:feature_selection_rationale}
 \centering
 \footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabularx}{\columnwidth}{l|c|X}
 \toprule
-\textbf{Feature} & \textbf{Importance} & \textbf{Exclusion Rationale} \\
+\textbf{Feature} & \textbf{Imp.} & \textbf{Exclusion Rationale} \\
 \midrule
-people\_liable & 0.038 & Number of dependents provides negligible discriminatory signal; financial capacity is better captured by income proxies \\
+people\_liable & 0.038 & Negligible signal; financial capacity better captured by income proxies \\
 \midrule
-other\_debtors & 0.092 & Guarantor presence offers minimal incremental information beyond established financial status indicators \\
+other\_debtors & 0.092 & Minimal incremental information beyond financial status indicators \\
 \midrule
-residence\_since & 0.092 & Residential stability is redundant given stronger financial indicators (checking and savings account status) \\
+residence\_since & 0.092 & Redundant given stronger financial indicators (checking, savings) \\
 \midrule
-telephone & 0.122 & Outdated proxy for stability; telephone ownership lacks relevance in modern credit assessment \\
+telephone & 0.122 & Outdated proxy; lacks relevance in modern credit assessment \\
 \midrule
-existing\_credits & 0.123 & Credit history subsumes the information provided by explicit credit count, rendering this variable redundant \\
+existing\_credits & 0.123 & Subsumed by credit history; variable is redundant \\
 \midrule
-job & 0.140 & Employment category contributes marginally; occupational information is superseded by direct financial capacity measures \\
+job & 0.140 & Marginal contribution; superseded by financial capacity measures \\
 \midrule
-foreign\_worker & 0.138 & Demographic status adds minimal explanatory power once core financial attributes are accounted for \\
+foreign\_worker & 0.138 & Minimal power once core financial attributes included \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -437,10 +440,12 @@ Predictive performance and model reliability operate along distinct epistemic di
 The relationship between discriminative ability and reliability is not a priori monotonic. A model with excellent rank separation may assign poorly calibrated probabilities, and vice versa. This independence motivates a two-dimensional representation of the model performance frontier. Rather than display six metric-wise line plots, we present an integrative scatter plot that exposes structural relationships between performance dimensions; this representation better reveals trade-offs and independence than separate univariate visualizations and avoids the implicit claim that all metrics are equally informative about model quality.
 
 \begin{table}[ht]
-\caption{Canonical Model Instantiations: Performance Metrics for Representative Family Constructors}
+\caption{Canonical Model Instantiations: Performance Metrics}
 \label{tab:benchmark_german_credit_record_csv}
 \centering
-\footnotesize
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l c c c c c c c}
 \toprule
 Group & Model & AUC & PCC & Rec. & BS & KS & PG & H \\
